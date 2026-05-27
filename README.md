@@ -1,5 +1,4 @@
 # Hardware-Accelerated-Image-Thresholding on PYNQ-Z2 FPGA Board
-Image processing on PYNQ-Z2 using hardware acceleration for image thresholding with Python and FPGA-based implementation.
 
 > Hardware-accelerated image thresholding using the PYNQ-Z2 FPGA platform — converting color images to grayscale via a custom AXI-based design in Xilinx Vivado and deploying it through a Jupyter Notebook on the PYNQ framework.
 
@@ -25,7 +24,7 @@ Image processing on PYNQ-Z2 using hardware acceleration for image thresholding w
 
 This project demonstrates real-time image thresholding on an FPGA using the **PYNQ-Z2 development board**. A custom hardware design was built in **Xilinx Vivado** using an AXI-based block design that integrates the Zynq Processing System (PS) with programmable logic (PL). The hardware bitstream was deployed onto the PYNQ board and controlled via a **Python/Jupyter Notebook** interface over a browser. The final result is the conversion of a color image to a grayscale image using hardware-accelerated logic.
 
-> 📷 *Place an overview block diagram screenshot here:* `images/block_design_overview.png`
+> https://github.com/ChallagollaSriPranathi/Hardware-Accelerated-Image-Thresholding/blob/main/BlockDiagram.jpeg
 
 ---
 
