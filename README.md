@@ -10,13 +10,10 @@
 - [Objectives](#objectives)
 - [Hardware & Software Requirements](#hardware--software-requirements)
 - [Workflow / Step-by-Step Procedure](#workflow--step-by-step-procedure)
-- [Code Explanation](#code-explanation)
 - [Results / Output](#results--output)
 - [Applications](#applications)
 - [Challenges Faced](#challenges-faced)
 - [Future Improvements](#future-improvements)
-- [Folder Structure](#folder-structure)
-- [Resume-Friendly Description](#resume-friendly-description)
 
 ---
 
@@ -181,83 +178,6 @@ Upload the following files to Jupyter:
 
 ---
 
-## 💻 Code Explanation
-
-> 📝 *Note: The full Python notebook code was not captured in the uploaded images. The following is a representative example of what this notebook typically contains.*
-
-```python
-from pynq import Overlay
-from pynq.lib.video import *
-import numpy as np
-from PIL import Image
-import matplotlib.pyplot as plt
-
-# Load the overlay (bitstream + hwh)
-overlay = Overlay("design_1.bit")
-
-# Load input color image
-img_color = Image.open("input_image.jpg")
-img_array = np.array(img_color)
-
-# Convert color image to grayscale using hardware or software threshold
-img_gray = np.mean(img_array, axis=2).astype(np.uint8)
-
-# Display results
-plt.figure(figsize=(10, 5))
-plt.subplot(1, 2, 1)
-plt.title("Original Color Image")
-plt.imshow(img_color)
-
-plt.subplot(1, 2, 2)
-plt.title("Grayscale (Thresholded) Image")
-plt.imshow(img_gray, cmap='gray')
-plt.show()
-```
-
-> 📷 *Place your Jupyter Notebook screenshot here:* `images/jupyter_notebook.png`
-
-### Verilog Thresholding Module (Approximate)
-
-```verilog
-module threshold_top (
-    input  wire        aclk,
-    input  wire        aresetn,
-    // AXI Stream Input
-    input  wire [23:0] s_axis_tdata,   // RGB pixel data
-    input  wire        s_axis_tvalid,
-    output wire        s_axis_tready,
-    input  wire        s_axis_tlast,
-    // AXI Stream Output
-    output reg  [7:0]  m_axis_tdata,   // Grayscale pixel
-    output reg         m_axis_tvalid,
-    input  wire        m_axis_tready,
-    output reg         m_axis_tlast
-);
-
-    // Grayscale conversion: Y = 0.299R + 0.587G + 0.114B
-    wire [7:0] r = s_axis_tdata[23:16];
-    wire [7:0] g = s_axis_tdata[15:8];
-    wire [7:0] b = s_axis_tdata[7:0];
-
-    always @(posedge aclk) begin
-        if (!aresetn) begin
-            m_axis_tvalid <= 0;
-        end else if (s_axis_tvalid && m_axis_tready) begin
-            m_axis_tdata  <= (r >> 2) + (g >> 1) + (b >> 3); // Approx grayscale
-            m_axis_tvalid <= 1;
-            m_axis_tlast  <= s_axis_tlast;
-        end
-    end
-
-    assign s_axis_tready = m_axis_tready;
-
-endmodule
-```
-
-> [confirm this step] — Exact Verilog code was not visible in images. Above is a representative approximation.
-
----
-
 ## 📊 Results / Output
 
 | Input | Output |
@@ -265,9 +185,8 @@ endmodule
 | Color image (RGB, `.jpg`) | Grayscale image |
 | Processed via FPGA hardware | Displayed in Jupyter Notebook |
 
-> 📷 *Place your result images here:*
-> - `images/input_color_image.png`
-> - `images/output_gray_image.png`
+><img width="1080" height="1080" alt="image" src="https://github.com/user-attachments/assets/e55d9572-405a-44c8-ba0a-196d4fdcee30" />
+
 
 **Key observations:**
 - The color image was successfully converted to grayscale
@@ -294,7 +213,6 @@ endmodule
 - **File naming mismatch** — The `.bit` and `.hwh` files must have identical base names; a mismatch prevents the overlay from loading
 - **Browser access to PYNQ** — IP address configuration and network setup on first use can be confusing
 - **Bitstream generation time** — Synthesis and implementation can take significant time depending on design complexity
-- **[confirm this step]** — Any timing closure issues during implementation
 
 ---
 
@@ -309,53 +227,8 @@ endmodule
 
 ---
 
-## 📁 Folder Structure
-
-```
-thresholding-pynq-z2/
-│
-├── vivado/
-│   ├── thresholding.xpr              # Vivado project file
-│   ├── thresholding.srcs/
-│   │   └── sources_1/
-│   │       └── threshold_top.v       # Verilog thresholding module
-│   └── thresholding.runs/
-│       └── impl_1/
-│           └── design_1_wrapper.bit  # Generated bitstream
-│
-├── pynq_overlay/
-│   ├── design_1.bit                  # Renamed bitstream (copy)
-│   ├── design_1.hwh                  # Hardware handoff file (copy)
-│   └── thresholding_notebook.ipynb   # Jupyter Notebook
-│
-├── images/
-│   ├── block_design_overview.png     # Vivado block diagram screenshot
-│   ├── jupyter_notebook.png          # Notebook screenshot
-│   ├── input_color_image.png         # Sample input image
-│   └── output_gray_image.png         # Output grayscale image
-│
-├── notes/
-│   ├── workshop_notes_page1.jpg      # Handwritten notes (image 1)
-│   ├── workshop_notes_page2.jpg      # Handwritten notes (image 2)
-│   └── workshop_notes_page3.jpg      # Handwritten notes (image 3)
-│
-└── README.md
-```
-
----
-
-## 📄 Resume-Friendly Description
-
-> **Image Thresholding on PYNQ-Z2 FPGA** | *Xilinx Vivado · PYNQ Framework · Verilog · Python*
->
-> Designed and deployed a hardware-accelerated image thresholding system on the PYNQ-Z2 FPGA board. Built a custom AXI-based block design in Xilinx Vivado integrating Zynq PS, AXI DMA, AXI Stream FIFO, and a custom Verilog RTL module. Generated and exported the bitstream to the PYNQ board, then used Python and Jupyter Notebook to load the overlay and convert a color image to grayscale — demonstrating end-to-end FPGA-based image processing from hardware design to software control.
-
----
 
 ## 🙏 Acknowledgements
 
 This project was completed as part of a hands-on workshop on FPGA-based image processing using the PYNQ-Z2 platform.
 
----
-
-*📌 Items marked `[confirm this step]` should be verified against your actual Vivado project or workshop materials before publishing.*
