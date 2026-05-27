@@ -10,7 +10,7 @@ overlay = Overlay("threshold_bd_wrapper.bit")
 dma = overlay.axi_dma_0
 
 # Open the image
-img = cv2.imread("IMG_0866.JPG", cv2.IMREAD_GRAYSCALE)
+img = cv2.imread("Inputimage.JPG", cv2.IMREAD_GRAYSCALE)
 if img is None:
     raise Exception("Failed to load image")
 
