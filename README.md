@@ -17,11 +17,12 @@
 
 ---
 
-## 🔍 Overview
+## Overview
 
 This project demonstrates real-time image thresholding on an FPGA using the **PYNQ-Z2 development board**. A custom hardware design was built in **Xilinx Vivado** using an AXI-based block design that integrates the Zynq Processing System (PS) with programmable logic (PL). The hardware bitstream was deployed onto the PYNQ board and controlled via a **Python/Jupyter Notebook** interface over a browser. The final result is the conversion of a color image to a grayscale image using hardware-accelerated logic.
 
-> https://github.com/ChallagollaSriPranathi/Hardware-Accelerated-Image-Thresholding/blob/main/BlockDiagram.jpeg
+<img width="1280" height="685" alt="image" src="https://github.com/user-attachments/assets/9fdfc028-3342-4748-aa8c-f072a63b570e" />
+
 
 ---
 
@@ -36,7 +37,7 @@ This project demonstrates real-time image thresholding on an FPGA using the **PY
 
 ---
 
-## 🛠️ Hardware & Software Requirements
+## Hardware & Software Requirements
 
 ### Hardware
 | Component | Details |
@@ -195,7 +196,7 @@ Upload the following files to Jupyter:
 
 ---
 
-## 🚀 Applications
+## Applications
 
 - **Medical Imaging** — preprocessing scans before analysis
 - **Computer Vision pipelines** — grayscale is a standard first step in edge detection, face recognition, etc.
@@ -206,29 +207,7 @@ Upload the following files to Jupyter:
 
 ---
 
-## ⚠️ Challenges Faced
-
-- **Board not listed in Vivado** — Required refreshing the board repository; the Pynq-Z2 board files needed to be manually installed
-- **AXI connection complexity** — Managing multiple AXI interconnect types (AXI4, AXI4-Lite, AXI4-Stream) requires careful port matching
-- **File naming mismatch** — The `.bit` and `.hwh` files must have identical base names; a mismatch prevents the overlay from loading
-- **Browser access to PYNQ** — IP address configuration and network setup on first use can be confusing
-- **Bitstream generation time** — Synthesis and implementation can take significant time depending on design complexity
-
----
-
-## 🔮 Future Improvements
-
-- Extend to **full binary thresholding** with adjustable threshold values via Python sliders in Jupyter
-- Implement **real-time camera feed** processing using HDMI input/output on PYNQ-Z2
-- Add **Otsu's thresholding** algorithm in hardware for adaptive threshold selection
-- Explore **multi-level thresholding** (not just grayscale but segmentation)
-- Port design to **PYNQ-Z1** or **Ultra96** for scalability comparison
-- Package as a **reusable PYNQ overlay** for the community
-
----
-
-
-## 🙏 Acknowledgements
+## Acknowledgements
 
 This project was completed as part of a hands-on workshop on FPGA-based image processing using the PYNQ-Z2 platform.
 
