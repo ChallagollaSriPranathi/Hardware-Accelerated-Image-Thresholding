@@ -1,0 +1,56 @@
+import numpy as np
+import cv2
+from pynq import Overlay, allocate
+from pynq.lib.dma import DMA
+import asyncio
+import platform
+
+# Load the overlay
+overlay = Overlay("threshold_bd_wrapper.bit")
+dma = overlay.axi_dma_0
+
+# Open the image
+img = cv2.imread("IMG_0866.JPG", cv2.IMREAD_GRAYSCALE)
+if img is None:
+    raise Exception("Failed to load image")
+
+# Resize image to 32x32
+img_resized = cv2.resize(img, (32, 32), interpolation=cv2.INTER_AREA)
+img_flat = img_resized.flatten().astype(np.uint32)
+
+# Prepare buffers with pynq.allocate (1024 elements for 32x32)
+send_buffer = allocate(shape=(1024,), dtype=np.uint32)  # 1024 * 4 = 4096 bytes
+recv_buffer = allocate(shape=(1024,), dtype=np.uint32)
+np.copyto(send_buffer, img_flat)
+
+FPS = 60
+
+def setup():
+    global dma
+    # Initialize DMA and any other setup if needed
+    pass
+
+def update_loop():
+    global recv_buffer
+    # Process received data
+    reconstructed = recv_buffer.reshape(32, 32).astype(np.uint8)  # Convert to uint8
+    cv2.imwrite("output.jpg", reconstructed)
+    print("Image processed and saved as output.jpg")
+
+async def main():
+    setup()
+    while True:
+        # Send and receive data
+        dma.sendchannel.transfer(send_buffer)
+        dma.recvchannel.transfer(recv_buffer)
+        dma.sendchannel.wait()
+        dma.recvchannel.wait()
+
+        update_loop()
+        await asyncio.sleep(1.0 / FPS)
+
+if platform.system() == "Emscripten":
+    asyncio.ensure_future(main())
+else:
+    if __name__ == "__main__":
+        asyncio.run(main())
