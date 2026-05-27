@@ -12,9 +12,6 @@
 - [Workflow / Step-by-Step Procedure](#workflow--step-by-step-procedure)
 - [Results / Output](#results--output)
 - [Applications](#applications)
-- [Challenges Faced](#challenges-faced)
-- [Future Improvements](#future-improvements)
-
 ---
 
 ## Overview
